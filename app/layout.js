@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata = {
   title: "SK App",
   description: "hello Sourav",
@@ -26,7 +31,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <BootstrapClient />
         <Navbar />
-        {children}
+         <main>{children}</main>
         <Toaster position="top-right" reverseOrder={false} />
       </body>
     </html>
