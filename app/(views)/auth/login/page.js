@@ -1,10 +1,12 @@
 'use client'
+import axios from "axios";
 import { useState } from "react";
 import toast from 'react-hot-toast';
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage(){
-
+    const router = useRouter();
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
 
@@ -15,7 +17,7 @@ export default function LoginPage(){
         }
 
         try{
-            const reg = axios.post('/api/auth/login',
+            const res = await axios.post('/api/auth/login',
                 {email,password},
                 {
                     headers:{
@@ -23,9 +25,13 @@ export default function LoginPage(){
                     },
                 }
             );
-            toast.success(reg.data.message);
+            console.log(res.data);
+            setEmail('');setPassword('');
+            toast.success(res.data.message);
+            router.push('/dashboard');
         }catch(error){
-            toast.error(error.response?.data?.error || 'Login failed');
+            toast.error(error.response?.data?.message || 'Login failed');
+            console.log(error.response.data);
         }
     }
 
@@ -38,9 +44,9 @@ export default function LoginPage(){
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
                                 <label className="mt-2">Email</label>
-                                <input type="text" name="email" id="email" className="form-control" onChange={(e)=>setEmail(e.target.value)} />
+                                <input type="text" name="email" id="email" className="form-control" value={email} onChange={(e)=>setEmail(e.target.value)} />
                                 <label className="mt-2">Password</label>
-                                <input type="text" name="password" id="password" className="form-control" onChange={(e)=>setPassword(e.target.value)} />
+                                <input type="text" name="password" id="password" className="form-control" value={password} onChange={(e)=>setPassword(e.target.value)} />
                                 <button type="submit" className="text-center btn btn-success mt-4">Login</button>
                             </form>
                         </div>
