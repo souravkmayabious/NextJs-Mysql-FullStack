@@ -24,10 +24,10 @@ export default function Navbar() {
               <Link className="nav-link active" aria-current="page" href="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/register">Register</Link>
+              <Link className="nav-link" href="/auth/register">Register</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/login">Login</Link>
+              <Link className="nav-link" href="/auth/login">Login</Link>
             </li>
           </ul>
         </div>
