@@ -1,22 +1,16 @@
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { db } from "@/lib/db";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 
 export async function GET(request) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token");
+    const user = await getDataFromToken(request);
 
-    if(!token){
-        return NextResponse.json({success:false,message:"Unauthorized no token provided"},{status:401})
-    }else{
-        return NextResponse.json({success:true,message:token},{status:200})
-    }
-
+    return NextResponse.json({success:true,message:"Authorized",user},{status:201})
+    
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Failed to retrive", error },
+      { success: false, message:  error.message || "Failed to retrive"},
       { status: 400 }
     );
   }
