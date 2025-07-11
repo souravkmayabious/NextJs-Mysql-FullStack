@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 export async function POST(request) {
   const body = await request.json();
   const { email,password } = body;
-  if(!email && !password){
+  if(!email || !password){
      return NextResponse.json({ success:false,message: 'Provide credentials' }, {status: 401});
   }
   try{
@@ -19,16 +19,16 @@ export async function POST(request) {
     if (!match) return NextResponse.json({ success:false,message: 'Invalid credentials' }, {status: 401});
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     
-     cookies().set('token', token, {
+    const response =  NextResponse.json({ success:true,message: 'Login successful', token }, {status: 200});
+    
+    response.cookies.set('token', token, {
       httpOnly: true,
       path: '/',
       maxAge: 60 * 60 * 24, // 1 day
-      secure: true,           // Only sent over HTTPS
+       secure: process.env.NODE_ENV === 'production',           // Only sent over HTTPS
       sameSite: 'Lax',        // Helps prevent CSRF
     });
-    return NextResponse.json({ success:true,message: 'Login successful', token }, {status: 200});
-    
-
+    return response;
   }catch(error){
     return NextResponse.json({ success:false,message: "User Login Failed" ,error:error}, {status: 400});
   }
